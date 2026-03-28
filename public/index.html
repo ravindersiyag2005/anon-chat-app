@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anonymous Chat</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Load Socket.io client library -->
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header Section -->
+        <header class="chat-header">
+            <div class="logo">
+                <span class="logo-icon"></span>
+                <h1>AnonChat</h1>
+            </div>
+            <div class="status-container">
+                <div id="status-dot" class="dot disconnected"></div>
+                <span id="status-text">Disconnected</span>
+            </div>
+        </header>
+
+        <!-- Main Chat Area -->
+        <main class="chat-main">
+            <!-- Overlay when not matched -->
+            <div id="overlay" class="overlay active">
+                <h2 id="overlay-title">Connecting to server...</h2>
+                <p id="overlay-subtitle">Please wait</p>
+                <button id="start-btn" class="btn primary-btn hidden">Start Chatting</button>
+            </div>
+
+            <!-- Messages Container -->
+            <div id="messages" class="messages-container hidden">
+                <!-- Messages will be injected here -->
+            </div>
+        </main>
+
+        <!-- Chat Controls Area -->
+        <footer class="chat-controls">
+            <div class="typing-indicator hidden" id="typing-indicator">
+                Partner is typing ✍️<span>.</span><span>.</span><span>.</span>
+            </div>
+            <div class="input-group">
+                <button id="skip-btn" class="btn secondary-btn" disabled>Skip</button>
+                <input type="text" id="message-input" placeholder="Type a message..." disabled autocomplete="off" />
+                <button id="send-btn" class="btn primary-btn" disabled>
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                </button>
+            </div>
+        </footer>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
