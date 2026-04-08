@@ -106,11 +106,15 @@ async function findMatch() {
         await set(myQueueRef, true);
         
         // Remove from queue on disconnect
+        if (disconnectRef) {
+            disconnectRef.cancel();
+        }
         disconnectRef = onDisconnect(myQueueRef);
         disconnectRef.remove();
 
         // Listen for assignment
         const userRoomRef = ref(db, `user_rooms/${uid}`);
+        off(userRoomRef); // Clear any stray listeners
         onValue(userRoomRef, (snap) => {
             const roomId = snap.val();
             if (roomId) {
@@ -129,6 +133,8 @@ async function findMatch() {
 }
 
 function joinRoom(roomId) {
+    if (isMatched && currentRoomId === roomId) return; // Prevent double joining!
+    
     currentRoomId = roomId;
     isMatched = true;
 
