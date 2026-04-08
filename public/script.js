@@ -39,6 +39,8 @@ let myQueueRef = null;
 let disconnectRef = null;
 let partnerListener = null;
 let messageListener = null;
+let currentPartnerId = null;
+let lastPartnerId = null;
 
 // Initial Setup
 setStatus('connected', 'Connected');
@@ -76,7 +78,7 @@ async function findMatch() {
     if (snapshot.exists()) {
         const queue = snapshot.val();
         for (const id in queue) {
-            if (id !== uid && queue[id] !== 'matched') {
+            if (id !== uid && id !== lastPartnerId && queue[id] !== 'matched') {
                 // Potential match found
                 partnerId = id;
                 matchFound = true;
@@ -162,6 +164,12 @@ function joinRoom(roomId) {
     const roomUsersRef = ref(db, `rooms/${currentRoomId}/users`);
     partnerListener = onValue(roomUsersRef, (snap) => {
         const users = snap.val();
+        if (users) {
+            for (const id in users) {
+                if (id !== uid) currentPartnerId = id;
+            }
+        }
+        
         if (!users || Object.keys(users).length < 2) {
             // Partner left
             handlePartnerDisconnect();
@@ -207,6 +215,11 @@ function handlePartnerDisconnect() {
 
 async function leaveRoom(skipped = false) {
     if (!currentRoomId) return;
+
+    if (currentPartnerId) {
+        lastPartnerId = currentPartnerId;
+        currentPartnerId = null;
+    }
 
     if (skipped) {
         isMatched = false;
